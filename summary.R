@@ -60,3 +60,6 @@ names(methy_sel) <- toget[,3]
 selected_methy <- list(
 	scores=methy_sel,mapping=methy_pheno_qtl
 )
+
+setwd('/home/zhu/rushdata/old')
+save(selected_snp,selected_methy,file='lastroundsel.rda')
