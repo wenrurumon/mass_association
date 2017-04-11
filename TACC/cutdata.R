@@ -31,6 +31,7 @@ raw <- lapply(dir(),function(x){
 	pmethy
 })
 raw2 <- do.call(c,raw)
+methylation_site_names <- unlist(lapply(raw2,function(x){names(x$pos)}))
 methylation_fpca <- lapply(raw2,function(x){
 	x.pid <- rownames(x$methy)
 	x <- x$q2fpca$score
@@ -42,7 +43,7 @@ methylation_site <- lapply(raw2,function(x){
 	x[match(pid,x.pid),,drop=F]
 })
 setwd('/home/zhu/rushdata/tacc')
-save(methylation_site,methylation_fpca,file='methylation4cut.rda')
+save(methylation_site_names,methylation_site,methylation_fpca,file='methylation4cut.rda')
 
 #SNP
 rm(list=ls())
@@ -67,8 +68,9 @@ snp_site <- lapply(raw2,function(x){
 	x <- x$snp
 	x[match(pid,x.pid),,drop=F]
 })
+snp_site_names <- unlist(lapply(raw2,function(x){names(x$pos)}))
 setwd('/home/zhu/rushdata/tacc')
-save(snp_site,snp_fpca,file='snp4cut.rda')
+save(snp_site_names,snp_site,snp_fpca,file='snp4cut.rda')
 
 #expression
 rm(list=ls())
@@ -83,4 +85,10 @@ expr <- lapply(raw2,function(x){
 })
 expr <- do.call(cbind,expr)
 expr <- t(unique(t(expr)))
-save(expr,file='expr4cut.rda')
+
+exprs <- lapply(1:ncol(expr),function(i){
+	expr[,i,drop=F]
+})
+names(exprs) <- colnames(expr)
+setwd('/home/zhu/rushdata/tacc')
+save(exprs,file='expr4cut.rda')
